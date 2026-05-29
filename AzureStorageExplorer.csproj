@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseHighDpiAware>true</UseHighDpiAware>
+    <AssemblyName>AzureStorageExplorer</AssemblyName>
+    <RootNamespace>AzureStorageExplorer</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.19.0" />
+    <PackageReference Include="Azure.Identity" Version="1.10.0" />
+  </ItemGroup>
+
+</Project>

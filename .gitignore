@@ -1,0 +1,72 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options directory
+.vs/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Dependencies
+packages/
+.nuget/
+
+# Azure Storage Explorer temp files
+*.tmp
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+*~
+
+# Build folder
+dist/
+build/
+
+# Connection strings and secrets (NEVER commit these!)
+*.config
+appsettings.local.json
+connectionstring.txt
+secrets.json
+.env
+.env.local
+
+# Project files
+*.csproj.user
+*.sln.user
+
+# Rider
+.idea/
+*.sln.iml
+
+# Local History
+.history/
+
+# Output
+*.exe
+*.dll
+*.pdb
