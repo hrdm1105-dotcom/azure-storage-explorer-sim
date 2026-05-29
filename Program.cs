@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using Telerik.WinControls;
 
 namespace AzureStorageExplorer
 {
@@ -12,7 +13,11 @@ namespace AzureStorageExplorer
         static void Main()
         {
             Application.EnableVisualStyles();
-            Application.DefaultFont = new System.Drawing.Font("Segoe UI", 9F);
+            Application.DefaultFont = new System.Drawing.Font("Segoe UI", 10F);
+            
+            // Apply Telerik theme
+            ThemeResolutionService.ApplicationTheme = "TelerikMetro";
+            
             Application.Run(new MainForm());
         }
     }

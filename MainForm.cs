@@ -6,184 +6,236 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Telerik.WinControls;
+using Telerik.WinControls.UI;
 
 namespace AzureStorageExplorer
 {
-    public partial class MainForm : Form
+    public class MainForm : RadForm
     {
         private BlobContainerClient _containerClient;
         private string _connectionString;
         private string _containerName;
 
+        // UI Controls
+        private RadTextBox connectionStringTextBox;
+        private RadTextBox containerNameTextBox;
+        private RadButton connectButton;
+        private RadButton uploadButton;
+        private RadButton downloadButton;
+        private RadButton deleteButton;
+        private RadButton refreshButton;
+        private RadGridView blobGridView;
+        private RadLabel statusLabel;
+        private RadProgressBar progressBar;
+
         public MainForm()
         {
             InitializeComponent();
-            this.Text = "Azure Storage Explorer Simulator";
-            this.Size = new System.Drawing.Size(1000, 700);
+            this.Text = "Azure Storage Explorer Simulator - Telerik Edition";
+            this.Size = new System.Drawing.Size(1400, 900);
             this.StartPosition = FormStartPosition.CenterScreen;
+            ThemeResolutionService.ApplicationTheme = "TelerikMetro";
         }
 
         private void InitializeComponent()
         {
-            // Panel for connection settings
-            var connectionPanel = new GroupBox();
-            connectionPanel.Text = "Connection Settings";
-            connectionPanel.Location = new System.Drawing.Point(10, 10);
-            connectionPanel.Size = new System.Drawing.Size(960, 100);
+            this.SuspendLayout();
 
-            var label1 = new Label();
+            // Connection Settings Group
+            var connectionGroupBox = new GroupBox();
+            connectionGroupBox.Text = "Connection Settings";
+            connectionGroupBox.Location = new System.Drawing.Point(10, 10);
+            connectionGroupBox.Size = new System.Drawing.Size(1370, 110);
+
+            var label1 = new RadLabel();
             label1.Text = "Connection String:";
             label1.Location = new System.Drawing.Point(10, 25);
-            label1.Size = new System.Drawing.Size(100, 20);
+            label1.Size = new System.Drawing.Size(120, 20);
 
-            var connectionStringTextBox = new TextBox();
-            connectionStringTextBox.Name = "connectionStringTextBox";
-            connectionStringTextBox.Location = new System.Drawing.Point(120, 25);
-            connectionStringTextBox.Size = new System.Drawing.Size(500, 20);
-            connectionStringTextBox.UseSystemPasswordChar = false;
+            connectionStringTextBox = new RadTextBox();
+            connectionStringTextBox.Location = new System.Drawing.Point(140, 25);
+            connectionStringTextBox.Size = new System.Drawing.Size(700, 30);
+            connectionStringTextBox.Text = "";
 
-            var label2 = new Label();
+            var label2 = new RadLabel();
             label2.Text = "Container Name:";
-            label2.Location = new System.Drawing.Point(10, 55);
-            label2.Size = new System.Drawing.Size(100, 20);
+            label2.Location = new System.Drawing.Point(10, 65);
+            label2.Size = new System.Drawing.Size(120, 20);
 
-            var containerNameTextBox = new TextBox();
-            containerNameTextBox.Name = "containerNameTextBox";
-            containerNameTextBox.Location = new System.Drawing.Point(120, 55);
-            containerNameTextBox.Size = new System.Drawing.Size(200, 20);
+            containerNameTextBox = new RadTextBox();
+            containerNameTextBox.Location = new System.Drawing.Point(140, 65);
+            containerNameTextBox.Size = new System.Drawing.Size(250, 30);
+            containerNameTextBox.Text = "";
 
-            var connectButton = new Button();
-            connectButton.Text = "Connect";
-            connectButton.Location = new System.Drawing.Point(630, 25);
-            connectButton.Size = new System.Drawing.Size(100, 30);
+            connectButton = new RadButton();
+            connectButton.Text = "🔐 Connect";
+            connectButton.Location = new System.Drawing.Point(900, 35);
+            connectButton.Size = new System.Drawing.Size(150, 45);
             connectButton.Click += ConnectButton_Click;
+            connectButton.Font = new System.Drawing.Font("Segoe UI", 11, System.Drawing.FontStyle.Bold);
 
-            connectionPanel.Controls.Add(label1);
-            connectionPanel.Controls.Add(connectionStringTextBox);
-            connectionPanel.Controls.Add(label2);
-            connectionPanel.Controls.Add(containerNameTextBox);
-            connectionPanel.Controls.Add(connectButton);
+            connectionGroupBox.Controls.Add(label1);
+            connectionGroupBox.Controls.Add(connectionStringTextBox);
+            connectionGroupBox.Controls.Add(label2);
+            connectionGroupBox.Controls.Add(containerNameTextBox);
+            connectionGroupBox.Controls.Add(connectButton);
 
-            // Panel for actions
-            var actionPanel = new GroupBox();
-            actionPanel.Text = "Actions";
-            actionPanel.Location = new System.Drawing.Point(10, 115);
-            actionPanel.Size = new System.Drawing.Size(960, 60);
+            // Actions Group
+            var actionsGroupBox = new GroupBox();
+            actionsGroupBox.Text = "Actions";
+            actionsGroupBox.Location = new System.Drawing.Point(10, 130);
+            actionsGroupBox.Size = new System.Drawing.Size(1370, 75);
 
-            var uploadButton = new Button();
-            uploadButton.Name = "uploadButton";
-            uploadButton.Text = "Upload File";
+            uploadButton = new RadButton();
+            uploadButton.Text = "📤 Upload File";
             uploadButton.Location = new System.Drawing.Point(10, 25);
-            uploadButton.Size = new System.Drawing.Size(120, 30);
+            uploadButton.Size = new System.Drawing.Size(160, 40);
             uploadButton.Click += UploadButton_Click;
             uploadButton.Enabled = false;
+            uploadButton.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold);
 
-            var refreshButton = new Button();
-            refreshButton.Name = "refreshButton";
-            refreshButton.Text = "Refresh List";
-            refreshButton.Location = new System.Drawing.Point(140, 25);
-            refreshButton.Size = new System.Drawing.Size(120, 30);
-            refreshButton.Click += RefreshButton_Click;
-            refreshButton.Enabled = false;
-
-            var deleteButton = new Button();
-            deleteButton.Name = "deleteButton";
-            deleteButton.Text = "Delete Selected";
-            deleteButton.Location = new System.Drawing.Point(270, 25);
-            deleteButton.Size = new System.Drawing.Size(120, 30);
-            deleteButton.Click += DeleteButton_Click;
-            deleteButton.Enabled = false;
-
-            var downloadButton = new Button();
-            downloadButton.Name = "downloadButton";
-            downloadButton.Text = "Download";
-            downloadButton.Location = new System.Drawing.Point(400, 25);
-            downloadButton.Size = new System.Drawing.Size(120, 30);
+            downloadButton = new RadButton();
+            downloadButton.Text = "📥 Download";
+            downloadButton.Location = new System.Drawing.Point(180, 25);
+            downloadButton.Size = new System.Drawing.Size(160, 40);
             downloadButton.Click += DownloadButton_Click;
             downloadButton.Enabled = false;
+            downloadButton.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold);
 
-            actionPanel.Controls.Add(uploadButton);
-            actionPanel.Controls.Add(refreshButton);
-            actionPanel.Controls.Add(deleteButton);
-            actionPanel.Controls.Add(downloadButton);
+            deleteButton = new RadButton();
+            deleteButton.Text = "🗑️ Delete Selected";
+            deleteButton.Location = new System.Drawing.Point(350, 25);
+            deleteButton.Size = new System.Drawing.Size(160, 40);
+            deleteButton.Click += DeleteButton_Click;
+            deleteButton.Enabled = false;
+            deleteButton.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold);
 
-            // List view for blobs
-            var blobListView = new ListView();
-            blobListView.Name = "blobListView";
-            blobListView.Location = new System.Drawing.Point(10, 185);
-            blobListView.Size = new System.Drawing.Size(960, 450);
-            blobListView.View = View.Details;
-            blobListView.FullRowSelect = true;
-            blobListView.GridLines = true;
-            blobListView.Columns.Add("Blob Name", 300);
-            blobListView.Columns.Add("Size (bytes)", 100);
-            blobListView.Columns.Add("Created", 200);
-            blobListView.Columns.Add("Last Modified", 200);
+            refreshButton = new RadButton();
+            refreshButton.Text = "🔄 Refresh List";
+            refreshButton.Location = new System.Drawing.Point(520, 25);
+            refreshButton.Size = new System.Drawing.Size(160, 40);
+            refreshButton.Click += RefreshButton_Click;
+            refreshButton.Enabled = false;
+            refreshButton.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold);
 
-            // Status bar
-            var statusLabel = new Label();
-            statusLabel.Name = "statusLabel";
-            statusLabel.Text = "Ready";
-            statusLabel.Location = new System.Drawing.Point(10, 645);
-            statusLabel.Size = new System.Drawing.Size(960, 20);
-            statusLabel.BorderStyle = BorderStyle.Fixed3D;
+            actionsGroupBox.Controls.Add(uploadButton);
+            actionsGroupBox.Controls.Add(downloadButton);
+            actionsGroupBox.Controls.Add(deleteButton);
+            actionsGroupBox.Controls.Add(refreshButton);
 
-            this.Controls.Add(connectionPanel);
-            this.Controls.Add(actionPanel);
-            this.Controls.Add(blobListView);
+            // Blob Grid View
+            blobGridView = new RadGridView();
+            blobGridView.Location = new System.Drawing.Point(10, 215);
+            blobGridView.Size = new System.Drawing.Size(1370, 600);
+            blobGridView.AutoSizeColumnsMode = GridViewAutoSizeColumnsMode.Fill;
+            blobGridView.ReadOnly = false;
+            blobGridView.AllowUserToResizeColumns = true;
+            blobGridView.AllowUserToResizeRows = false;
+            blobGridView.AllowUserToDeleteRows = false;
+            blobGridView.SelectionMode = GridViewSelectionMode.FullRowSelect;
+            blobGridView.MultiSelect = false;
+            blobGridView.ShowGroupPanel = false;
+            blobGridView.EnableFiltering = true;
+            blobGridView.ShowFilteringRow = true;
+
+            // Setup columns
+            var nameColumn = new GridViewTextBoxColumn();
+            nameColumn.HeaderText = "Blob Name";
+            nameColumn.Name = "BlobName";
+            nameColumn.FieldName = "BlobName";
+            nameColumn.Width = 500;
+            nameColumn.ReadOnly = true;
+
+            var sizeColumn = new GridViewTextBoxColumn();
+            sizeColumn.HeaderText = "Size (bytes)";
+            sizeColumn.Name = "Size";
+            sizeColumn.FieldName = "Size";
+            sizeColumn.Width = 150;
+            sizeColumn.ReadOnly = true;
+
+            var createdColumn = new GridViewTextBoxColumn();
+            createdColumn.HeaderText = "Created";
+            createdColumn.Name = "Created";
+            createdColumn.FieldName = "Created";
+            createdColumn.Width = 200;
+            createdColumn.ReadOnly = true;
+
+            var modifiedColumn = new GridViewTextBoxColumn();
+            modifiedColumn.HeaderText = "Last Modified";
+            modifiedColumn.Name = "LastModified";
+            modifiedColumn.FieldName = "LastModified";
+            modifiedColumn.Width = 200;
+            modifiedColumn.ReadOnly = true;
+
+            blobGridView.Columns.Add(nameColumn);
+            blobGridView.Columns.Add(sizeColumn);
+            blobGridView.Columns.Add(createdColumn);
+            blobGridView.Columns.Add(modifiedColumn);
+
+            // Progress Bar
+            progressBar = new RadProgressBar();
+            progressBar.Location = new System.Drawing.Point(10, 825);
+            progressBar.Size = new System.Drawing.Size(1370, 25);
+            progressBar.Visible = false;
+            progressBar.ShowPercentage = true;
+
+            // Status Label
+            statusLabel = new RadLabel();
+            statusLabel.Text = "✅ Ready";
+            statusLabel.Location = new System.Drawing.Point(10, 860);
+            statusLabel.Size = new System.Drawing.Size(1370, 25);
+            statusLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            statusLabel.Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold);
+
+            // Add controls to form
+            this.Controls.Add(connectionGroupBox);
+            this.Controls.Add(actionsGroupBox);
+            this.Controls.Add(blobGridView);
+            this.Controls.Add(progressBar);
             this.Controls.Add(statusLabel);
+
+            this.ResumeLayout();
         }
 
         private async void ConnectButton_Click(object sender, EventArgs e)
         {
             try
             {
-                var connectionStringTextBox = this.Controls.Cast<Control>()
-                    .FirstOrDefault(c => c.Name == "connectionStringTextBox") as TextBox;
-                var containerNameTextBox = this.Controls.Cast<Control>()
-                    .FirstOrDefault(c => c.Name == "containerNameTextBox") as TextBox;
-                var statusLabel = this.Controls.Cast<Control>()
-                    .FirstOrDefault(c => c.Name == "statusLabel") as Label;
-
-                _connectionString = connectionStringTextBox?.Text;
-                _containerName = containerNameTextBox?.Text;
+                _connectionString = connectionStringTextBox.Text;
+                _containerName = containerNameTextBox.Text;
 
                 if (string.IsNullOrWhiteSpace(_connectionString) || string.IsNullOrWhiteSpace(_containerName))
                 {
-                    MessageBox.Show("Please enter both connection string and container name.", "Validation Error");
+                    RadMessageBox.Show("Please enter both connection string and container name.", "Validation Error", MessageBoxButtons.OK, RadMessageIcon.Warning);
                     return;
                 }
 
-                statusLabel.Text = "Connecting...";
+                statusLabel.Text = "🔄 Connecting...";
                 this.Refresh();
 
-                // Create container client
-                _containerClient = new BlobContainerClient(new Uri(_connectionString), new Azure.Storage.StorageSharedKeyCredential(
-                    ExtractStorageAccountName(_connectionString), ExtractAccountKey(_connectionString)));
+                // Create container client from connection string
+                _containerClient = new BlobContainerClient(
+                    new Uri($"https://{ExtractStorageAccountName(_connectionString)}.blob.core.windows.net/{_containerName}"),
+                    new Azure.Storage.StorageSharedKeyCredential(ExtractStorageAccountName(_connectionString), ExtractAccountKey(_connectionString)));
 
-                // Test connection by getting properties
+                // Test connection
                 await _containerClient.GetPropertiesAsync();
 
-                statusLabel.Text = $"Connected to container: {_containerName}";
-                
-                // Enable action buttons
-                var uploadButton = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "uploadButton") as Button;
-                var refreshButton = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "refreshButton") as Button;
-                var deleteButton = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "deleteButton") as Button;
-                var downloadButton = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "downloadButton") as Button;
+                statusLabel.Text = $"✅ Connected to container: {_containerName}";
 
-                if (uploadButton != null) uploadButton.Enabled = true;
-                if (refreshButton != null) refreshButton.Enabled = true;
-                if (deleteButton != null) deleteButton.Enabled = true;
-                if (downloadButton != null) downloadButton.Enabled = true;
+                // Enable action buttons
+                uploadButton.Enabled = true;
+                downloadButton.Enabled = true;
+                deleteButton.Enabled = true;
+                refreshButton.Enabled = true;
 
                 await RefreshBlobList();
             }
             catch (Exception ex)
             {
-                var statusLabel = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "statusLabel") as Label;
-                statusLabel.Text = $"Connection failed: {ex.Message}";
-                MessageBox.Show($"Connection error: {ex.Message}", "Error");
+                statusLabel.Text = $"❌ Connection failed: {ex.Message}";
+                RadMessageBox.Show($"Connection error: {ex.Message}", "Error", MessageBoxButtons.OK, RadMessageIcon.Error);
             }
         }
 
@@ -200,8 +252,9 @@ namespace AzureStorageExplorer
                     var filePath = openFileDialog.FileName;
                     var fileName = Path.GetFileName(filePath);
 
-                    var statusLabel = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "statusLabel") as Label;
-                    statusLabel.Text = $"Uploading {fileName}...";
+                    statusLabel.Text = $"⬆️ Uploading {fileName}...";
+                    progressBar.Visible = true;
+                    progressBar.Value = 0;
                     this.Refresh();
 
                     using (var fileStream = File.OpenRead(filePath))
@@ -210,15 +263,17 @@ namespace AzureStorageExplorer
                         await blobClient.UploadAsync(fileStream, overwrite: true);
                     }
 
-                    statusLabel.Text = $"Successfully uploaded: {fileName}";
+                    statusLabel.Text = $"✅ Successfully uploaded: {fileName}";
+                    progressBar.Visible = false;
+                    RadMessageBox.Show($"File '{fileName}' uploaded successfully!", "Success", MessageBoxButtons.OK, RadMessageIcon.Info);
                     await RefreshBlobList();
                 }
             }
             catch (Exception ex)
             {
-                var statusLabel = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "statusLabel") as Label;
-                statusLabel.Text = $"Upload failed: {ex.Message}";
-                MessageBox.Show($"Upload error: {ex.Message}", "Error");
+                statusLabel.Text = $"❌ Upload failed: {ex.Message}";
+                progressBar.Visible = false;
+                RadMessageBox.Show($"Upload error: {ex.Message}", "Error", MessageBoxButtons.OK, RadMessageIcon.Error);
             }
         }
 
@@ -231,30 +286,33 @@ namespace AzureStorageExplorer
         {
             try
             {
-                var blobListView = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "blobListView") as ListView;
-                var statusLabel = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "statusLabel") as Label;
-
-                blobListView.Items.Clear();
-                statusLabel.Text = "Loading blobs...";
+                blobGridView.DataSource = null;
+                statusLabel.Text = "🔄 Loading blobs...";
+                progressBar.Visible = true;
                 this.Refresh();
+
+                var blobList = new List<BlobItemData>();
 
                 await foreach (var blobItem in _containerClient.GetBlobsAsync())
                 {
-                    var item = new ListViewItem(blobItem.Name);
-                    item.SubItems.Add(blobItem.Properties.ContentLength?.ToString() ?? "Unknown");
-                    item.SubItems.Add(blobItem.Properties.CreatedOn?.ToString("yyyy-MM-dd HH:mm:ss") ?? "Unknown");
-                    item.SubItems.Add(blobItem.Properties.LastModified?.ToString("yyyy-MM-dd HH:mm:ss") ?? "Unknown");
-                    
-                    blobListView.Items.Add(item);
+                    blobList.Add(new BlobItemData
+                    {
+                        BlobName = blobItem.Name,
+                        Size = blobItem.Properties.ContentLength?.ToString() ?? "Unknown",
+                        Created = blobItem.Properties.CreatedOn?.ToString("yyyy-MM-dd HH:mm:ss") ?? "Unknown",
+                        LastModified = blobItem.Properties.LastModified?.ToString("yyyy-MM-dd HH:mm:ss") ?? "Unknown"
+                    });
                 }
 
-                statusLabel.Text = $"Loaded {blobListView.Items.Count} blobs";
+                blobGridView.DataSource = blobList;
+                statusLabel.Text = $"✅ Loaded {blobList.Count} blobs";
+                progressBar.Visible = false;
             }
             catch (Exception ex)
             {
-                var statusLabel = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "statusLabel") as Label;
-                statusLabel.Text = $"Refresh failed: {ex.Message}";
-                MessageBox.Show($"Error loading blobs: {ex.Message}", "Error");
+                statusLabel.Text = $"❌ Refresh failed: {ex.Message}";
+                progressBar.Visible = false;
+                RadMessageBox.Show($"Error loading blobs: {ex.Message}", "Error", MessageBoxButtons.OK, RadMessageIcon.Error);
             }
         }
 
@@ -262,37 +320,36 @@ namespace AzureStorageExplorer
         {
             try
             {
-                var blobListView = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "blobListView") as ListView;
-                var statusLabel = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "statusLabel") as Label;
-
-                if (blobListView.SelectedItems.Count == 0)
+                if (blobGridView.SelectedRows.Count == 0)
                 {
-                    MessageBox.Show("Please select a blob to delete.", "No Selection");
+                    RadMessageBox.Show("Please select a blob to delete.", "No Selection", MessageBoxButtons.OK, RadMessageIcon.Warning);
                     return;
                 }
 
-                var selectedItem = blobListView.SelectedItems[0];
-                var blobName = selectedItem.Text;
+                var selectedRow = blobGridView.SelectedRows[0];
+                var blobName = selectedRow.Cells["BlobName"].Value.ToString();
 
-                var result = MessageBox.Show($"Are you sure you want to delete '{blobName}'?", "Confirm Delete", MessageBoxButtons.YesNo);
-                
+                var result = RadMessageBox.Show($"Are you sure you want to delete '{blobName}'?", "Confirm Delete", MessageBoxButtons.YesNo, RadMessageIcon.Question);
+
                 if (result == DialogResult.Yes)
                 {
-                    statusLabel.Text = $"Deleting {blobName}...";
+                    statusLabel.Text = $"🗑️ Deleting {blobName}...";
+                    progressBar.Visible = true;
                     this.Refresh();
 
                     var blobClient = _containerClient.GetBlobClient(blobName);
                     await blobClient.DeleteAsync();
 
-                    statusLabel.Text = $"Successfully deleted: {blobName}";
+                    statusLabel.Text = $"✅ Successfully deleted: {blobName}";
+                    progressBar.Visible = false;
                     await RefreshBlobList();
                 }
             }
             catch (Exception ex)
             {
-                var statusLabel = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "statusLabel") as Label;
-                statusLabel.Text = $"Delete failed: {ex.Message}";
-                MessageBox.Show($"Error deleting blob: {ex.Message}", "Error");
+                statusLabel.Text = $"❌ Delete failed: {ex.Message}";
+                progressBar.Visible = false;
+                RadMessageBox.Show($"Error deleting blob: {ex.Message}", "Error", MessageBoxButtons.OK, RadMessageIcon.Error);
             }
         }
 
@@ -300,17 +357,14 @@ namespace AzureStorageExplorer
         {
             try
             {
-                var blobListView = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "blobListView") as ListView;
-                var statusLabel = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "statusLabel") as Label;
-
-                if (blobListView.SelectedItems.Count == 0)
+                if (blobGridView.SelectedRows.Count == 0)
                 {
-                    MessageBox.Show("Please select a blob to download.", "No Selection");
+                    RadMessageBox.Show("Please select a blob to download.", "No Selection", MessageBoxButtons.OK, RadMessageIcon.Warning);
                     return;
                 }
 
-                var selectedItem = blobListView.SelectedItems[0];
-                var blobName = selectedItem.Text;
+                var selectedRow = blobGridView.SelectedRows[0];
+                var blobName = selectedRow.Cells["BlobName"].Value.ToString();
 
                 var saveFileDialog = new SaveFileDialog();
                 saveFileDialog.FileName = blobName;
@@ -318,7 +372,8 @@ namespace AzureStorageExplorer
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    statusLabel.Text = $"Downloading {blobName}...";
+                    statusLabel.Text = $"⬇️ Downloading {blobName}...";
+                    progressBar.Visible = true;
                     this.Refresh();
 
                     var blobClient = _containerClient.GetBlobClient(blobName);
@@ -329,15 +384,16 @@ namespace AzureStorageExplorer
                         await download.Value.Content.CopyToAsync(fileStream);
                     }
 
-                    statusLabel.Text = $"Successfully downloaded: {blobName}";
-                    MessageBox.Show("File downloaded successfully.", "Success");
+                    statusLabel.Text = $"✅ Successfully downloaded: {blobName}";
+                    progressBar.Visible = false;
+                    RadMessageBox.Show("File downloaded successfully.", "Success", MessageBoxButtons.OK, RadMessageIcon.Info);
                 }
             }
             catch (Exception ex)
             {
-                var statusLabel = this.Controls.Cast<Control>().FirstOrDefault(c => c.Name == "statusLabel") as Label;
-                statusLabel.Text = $"Download failed: {ex.Message}";
-                MessageBox.Show($"Error downloading blob: {ex.Message}", "Error");
+                statusLabel.Text = $"❌ Download failed: {ex.Message}";
+                progressBar.Visible = false;
+                RadMessageBox.Show($"Error downloading blob: {ex.Message}", "Error", MessageBoxButtons.OK, RadMessageIcon.Error);
             }
         }
 
@@ -371,6 +427,15 @@ namespace AzureStorageExplorer
             {
                 return null;
             }
+        }
+
+        // Model for grid binding
+        private class BlobItemData
+        {
+            public string BlobName { get; set; }
+            public string Size { get; set; }
+            public string Created { get; set; }
+            public string LastModified { get; set; }
         }
     }
 }

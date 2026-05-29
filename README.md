@@ -1,25 +1,29 @@
-# Azure Storage Explorer Simulator
+# Azure Storage Explorer Simulator - Telerik Edition
 
-A Windows Forms application that simulates Azure Storage Explorer functionality to connect to Azure Blob Storage, upload files, download blobs, and manage blob containers.
+A modern Windows Forms application built with **Telerik UI controls** and **.NET 9** that simulates Azure Storage Explorer functionality to connect to Azure Blob Storage, upload files, download blobs, and manage blob containers.
 
-## Features
+## ✨ Features
 
-✨ **Core Features:**
-- 🔐 **Connect to Azure Storage** - Connect using connection strings
-- 📤 **Upload Files** - Upload files to blob containers
+- 🔐 **Modern Telerik UI** - Professional-grade user interface with Telerik WinForms controls
+- 🔗 **Azure Connection** - Connect to Azure Blob Storage using connection strings
+- 📤 **Upload Files** - Upload files with progress tracking
 - 📥 **Download Blobs** - Download blobs to your local machine
-- 🗑️ **Delete Blobs** - Delete blobs with confirmation
-- 🔄 **Refresh** - Reload blob list to see latest changes
-- 📊 **Blob Details** - View blob metadata (size, created date, last modified)
+- 🗑️ **Delete Blobs** - Delete blobs with confirmation dialogs
+- 🔄 **Refresh List** - Real-time blob list updates
+- 📊 **Advanced Grid View** - Professional data grid with sorting, filtering, and selection
+- ⚡ **Async Operations** - Non-blocking async/await for smooth UX
+- 🎨 **Telerik Theme** - Modern TelerikMetro theme applied
+- 📈 **Status Indicators** - Visual feedback with emoji status indicators
 
-## Requirements
+## 🔧 Requirements
 
-- **.NET 6.0 or higher** (.NET 7.0+ recommended)
-- **Windows 10/11** (or Windows Server 2019+)
-- **Visual Studio 2022** or **Visual Studio Code** with C# extension
+- **.NET 9.0** (latest framework)
+- **Windows 10/11** or **Windows Server 2019+**
+- **Visual Studio 2022** (v17.9+) or **Visual Studio Code**
 - **Azure Storage Account** (for testing)
+- **Telerik License** (Community or Commercial)
 
-## Installation & Setup
+## 📥 Installation & Setup
 
 ### 1. Clone the Repository
 ```bash
@@ -27,13 +31,25 @@ git clone https://github.com/hrdm1105-dotcom/azure-storage-explorer-sim.git
 cd azure-storage-explorer-sim
 ```
 
-### 2. Install Dependencies
-```bash
-dotnet restore
+### 2. Install Telerik NuGet Package
+
+**Option A: Using Visual Studio Package Manager**
+```
+Install-Package Telerik.UI.for.WinForms -Version 2024.1.130
 ```
 
-### 3. Build the Project
+**Option B: Using .NET CLI**
 ```bash
+dotnet add package Telerik.UI.for.WinForms
+```
+
+**Option C: Manual (if using Telerik package source)**
+1. Configure your Telerik NuGet credentials
+2. Run: `dotnet restore`
+
+### 3. Restore and Build
+```bash
+dotnet restore
 dotnet build
 ```
 
@@ -42,220 +58,274 @@ dotnet build
 dotnet run
 ```
 
-## Usage Guide
+## 🚀 Usage Guide
 
 ### Getting Your Azure Storage Connection String
 
-1. **Sign in to Azure Portal** - https://portal.azure.com
-2. **Navigate to Storage Accounts**
-3. **Select your storage account**
-4. **Go to Access Keys** (left menu)
-5. **Copy the Connection String** from key1 or key2
+1. Go to **Azure Portal** - https://portal.azure.com
+2. Navigate to **Storage Accounts**
+3. Select your storage account
+4. Click **Access Keys** (left sidebar)
+5. Copy the **Connection String** (key1 or key2)
 
 ### Connection String Format
 
-Your connection string should look like:
 ```
 DefaultEndpointsProtocol=https;AccountName=yourstorageaccount;AccountKey=your-account-key==;EndpointSuffix=core.windows.net
 ```
 
 ### Using the Application
 
-1. **Paste Connection String** into the "Connection String" field
+1. **Paste Connection String** into the connection settings field
 2. **Enter Container Name** (e.g., "mycontainer")
-3. **Click Connect** to establish connection
-4. **Once Connected**, use these actions:
+3. **Click 🔐 Connect** - Establishes connection and loads blobs
+4. **Manage Blobs:**
 
 #### 📤 Upload File
-- Click "Upload File"
-- Select a file from your computer
-- File will be uploaded to the blob container
+- Click "📤 Upload File"
+- Select file from your computer
+- Progress bar shows upload status
+- Blob list updates automatically
 
 #### 📥 Download
-- Select a blob from the list
-- Click "Download"
+- Select blob from the grid
+- Click "📥 Download"
 - Choose save location
 - File downloads to your machine
 
 #### 🗑️ Delete Selected
-- Select a blob from the list
-- Click "Delete Selected"
-- Confirm deletion when prompted
+- Select blob from the grid
+- Click "🗑️ Delete Selected"
+- Confirm in dialog
+- Blob is removed from container
 
 #### 🔄 Refresh List
-- Click "Refresh List" to reload blobs
-- Shows all blobs currently in container
+- Click "🔄 Refresh List"
+- Updates blob list from Azure
 
-## Blob List View
+## 🎨 UI Components (Telerik)
 
-The blob list displays:
-- **Blob Name** - Name of the blob file
-- **Size (bytes)** - File size in bytes
-- **Created** - Creation timestamp
-- **Last Modified** - Last modification timestamp
+### Connection Settings Panel
+- **RadTextBox** - Connection string and container name inputs
+- **RadButton** - Connect button with icon support
 
-## Application Architecture
+### Actions Panel
+- **RadButton** - Upload, Download, Delete, Refresh buttons with emojis
+- Disabled until connection established
+- Large 160x40 buttons for easy interaction
+
+### Blob List View
+- **RadGridView** - Professional data grid with:
+  - **Column Headers**: Blob Name, Size, Created, Last Modified
+  - **Auto-resizing columns**
+  - **Full-row selection**
+  - **Read-only cells**
+  - **Sorting & Filtering capabilities**
+  - **Single selection mode**
+
+### Status Bar
+- **RadLabel** - Displays operation status with emoji indicators
+- Shows connection state and action feedback
+- Real-time updates
+
+### Progress Indicator
+- **RadProgressBar** - Visible during upload/download operations
+- Percentage display
+
+## 📁 Project Structure
 
 ```
-AzureStorageExplorer/
-├── Program.cs                 # Entry point
-├── MainForm.cs               # UI & Logic
-├── AzureStorageExplorer.csproj # Project config
-├── README.md                 # This file
-└── .gitignore               # Git configuration
+azure-storage-explorer-sim/
+├── Program.cs                          # Entry point with Telerik theme
+├── MainForm.cs                         # Main UI with Telerik controls
+├── AzureStorageExplorer.csproj        # .NET 9 project file
+├── README.md                           # This file
+└── .gitignore                         # Git configuration
 ```
 
-### Key Components
-
-- **MainForm.cs** - Main Windows Form containing:
-  - Connection Settings Panel
-  - Action Buttons Panel
-  - Blob List View
-  - Status Bar
-
-- **Azure SDK Integration**
-  - Uses `Azure.Storage.Blobs` v12.19.0
-  - Async/await patterns for non-blocking operations
-  - Connection string authentication
-
-## NuGet Dependencies
+## 📦 NuGet Dependencies
 
 ```xml
-<PackageReference Include="Azure.Storage.Blobs" Version="12.19.0" />
-<PackageReference Include="Azure.Identity" Version="1.10.0" />
+<ItemGroup>
+  <PackageReference Include="Azure.Storage.Blobs" Version="12.19.0" />
+  <PackageReference Include="Azure.Identity" Version="1.10.0" />
+  <PackageReference Include="Telerik.UI.for.WinForms" Version="2024.1.130" />
+</ItemGroup>
 ```
 
-## Error Handling
+## 🔒 Security Best Practices
 
-The application handles:
-- ❌ Invalid connection strings
-- ❌ Network connectivity issues
-- ❌ File upload/download failures
-- ❌ Blob deletion errors
-- ❌ Container access issues
+⚠️ **Critical Security Guidelines:**
 
-All errors are displayed in:
-1. Status bar at bottom of form
-2. Message box dialogs
+1. **Never hardcode connection strings** - Use Azure Key Vault in production
+2. **Use Azure Identity** - Implement DefaultAzureCredential for better security
+3. **Rotate keys regularly** - Update storage account keys periodically
+4. **Use SAS tokens** - For time-limited access
+5. **Network security** - Enable firewalls and service endpoints
+6. **Encryption** - Enable Azure Storage encryption at rest and in transit
 
-## Security Best Practices
-
-⚠️ **Important Security Considerations:**
-
-1. **Never hardcode connection strings** in production code
-2. **Use Azure Key Vault** to store credentials
-3. **Implement Managed Identities** when possible
-4. **Rotate storage account keys** regularly
-5. **Use SAS tokens** for time-limited access
-6. **Apply network security** (firewalls, service endpoints)
-7. **Enable Azure Storage encryption** at rest
-
-### For Production Use:
+### Production Implementation Example
 
 ```csharp
-// Use Azure Identity instead of connection strings
+// Use Azure Identity for authentication
 var credential = new DefaultAzureCredential();
 var containerClient = new BlobContainerClient(
     new Uri("https://youraccount.blob.core.windows.net/container"),
     credential);
 ```
 
-## Troubleshooting
+## 🐛 Troubleshooting
+
+### Installation Issues
+
+**"Package Telerik.UI.for.WinForms could not be found"**
+- Verify Telerik NuGet source is configured
+- Check Telerik license is valid
+- Try: `dotnet nuget update source Telerik --username [username] --password [password]`
+
+**".NET 9 not installed"**
+- Download from: https://dotnet.microsoft.com/download/dotnet/9.0
+- Verify: `dotnet --version`
 
 ### Connection Issues
 
 **"Invalid connection string"**
-- Verify the entire connection string is copied correctly
-- Check for spaces or special characters
-- Ensure you copied from Azure Portal
+- Verify entire string is copied correctly
+- Check for trailing spaces
+- Ensure format matches Azure standard
 
 **"Container not found"**
 - Verify container name spelling
 - Ensure container exists in storage account
-- Check you have access permissions
+- Check access permissions
 
-**"Access denied"**
-- Verify storage account key is correct
+**"Access Denied"**
+- Verify storage account key is current
 - Check account permissions
-- Ensure connection string hasn't expired
+- Ensure connection string matches account
 
-### File Upload Issues
+### UI Issues
 
-**"Upload error"**
-- Check file size limitations
-- Verify file is not locked by another process
-- Ensure container write permissions
+**"Telerik controls not rendering"**
+- Verify Telerik package is installed: `dotnet restore`
+- Check Telerik license in your environment
+- Restart Visual Studio if needed
 
-**"File too large"**
-- Azure blob has limits for single-block uploads
-- Consider using block blob uploads for large files
+**"Theme not applying"**
+- Ensure theme is set in Program.cs
+- Verify Telerik assemblies are loaded
 
-### Performance Tips
+## 🚀 Advanced Features
 
-- For large files, implement progress indicators
-- Use batch operations for multiple files
-- Consider connection pooling
+### Telerik Theme Customization
 
-## Future Enhancements
-
-📋 **Planned Features:**
-- [ ] Create/Delete containers
-- [ ] Folder-like organization with blob prefixes
-- [ ] Progress bars for large transfers
-- [ ] Batch file upload
-- [ ] Blob metadata viewing/editing
-- [ ] Connection history
-- [ ] Search and filter functionality
-- [ ] Blob properties dialog
-- [ ] Blob snapshots support
-- [ ] Leased blobs handling
-
-## Code Examples
-
-### Upload Example
+Available themes:
 ```csharp
+ThemeResolutionService.ApplicationTheme = "TelerikMetro";      // Default
+ThemeResolutionService.ApplicationTheme = "Windows11Light";
+ThemeResolutionService.ApplicationTheme = "Windows11Dark";
+ThemeResolutionService.ApplicationTheme = "Material";
+ThemeResolutionService.ApplicationTheme = "Fluent";
+```
+
+### Grid View Customization
+
+```csharp
+blobGridView.AutoSizeColumnsMode = GridViewAutoSizeColumnsMode.Fill;
+blobGridView.AllowUserToResizeColumns = true;
+blobGridView.EnableFiltering = true;
+blobGridView.ShowFilteringRow = true;
+```
+
+## 📈 Performance Tips
+
+- Use async operations for large file transfers
+- Implement pagination for containers with many blobs
+- Consider connection pooling for multiple operations
+- Optimize grid view with virtual scrolling for large datasets
+
+## 🎯 Future Enhancements
+
+- [ ] Telerik RadDocking for custom layouts
+- [ ] Advanced search with RadAutoComplete
+- [ ] Blob metadata editor with property grid
+- [ ] Batch operations with progress tracking
+- [ ] Connection history with RadComboBox
+- [ ] Settings dialog with theme selection
+- [ ] Export to Excel/CSV functionality
+- [ ] Real-time sync monitoring
+- [ ] Container management (create/delete)
+- [ ] Advanced filtering and sorting
+- [ ] Blob snapshots and versioning
+- [ ] SAS token generation
+
+## 💻 Code Examples
+
+### Upload with Telerik Progress
+
+```csharp
+progressBar.Visible = true;
 using (var fileStream = File.OpenRead(filePath))
 {
     var blobClient = _containerClient.GetBlobClient(fileName);
     await blobClient.UploadAsync(fileStream, overwrite: true);
 }
+progressBar.Visible = false;
 ```
 
-### Download Example
+### RadGridView Data Binding
+
 ```csharp
-var blobClient = _containerClient.GetBlobClient(blobName);
-var download = await blobClient.DownloadAsync();
-using (var fileStream = File.Create(savePath))
+var blobList = new List<BlobItemData>();
+await foreach (var blob in _containerClient.GetBlobsAsync())
 {
-    await download.Value.Content.CopyToAsync(fileStream);
+    blobList.Add(new BlobItemData { ... });
 }
+blobGridView.DataSource = blobList;
 ```
 
-### Delete Example
+### Telerik Message Boxes
+
 ```csharp
-var blobClient = _containerClient.GetBlobClient(blobName);
-await blobClient.DeleteAsync();
+// Info
+RadMessageBox.Show("Operation successful", "Success", 
+    MessageBoxButtons.OK, RadMessageIcon.Info);
+
+// Warning
+RadMessageBox.Show("Please select an item", "Warning", 
+    MessageBoxButtons.OK, RadMessageIcon.Warning);
+
+// Error
+RadMessageBox.Show("An error occurred", "Error", 
+    MessageBoxButtons.OK, RadMessageIcon.Error);
+
+// Question
+var result = RadMessageBox.Show("Continue?", "Question", 
+    MessageBoxButtons.YesNo, RadMessageIcon.Question);
 ```
 
-## Support & Contribution
+## 📚 Resources
 
-- Report issues via GitHub Issues
-- Submit pull requests for improvements
-- Follow Microsoft's contribution guidelines
+- [.NET 9 Documentation](https://docs.microsoft.com/dotnet/core/whats-new/dotnet-9)
+- [Telerik UI for WinForms](https://www.telerik.com/products/winforms.aspx)
+- [Azure Storage Documentation](https://docs.microsoft.com/azure/storage/)
+- [Azure SDK for .NET](https://github.com/Azure/azure-sdk-for-net)
+- [Telerik Community](https://www.telerik.com/forums)
 
-## License
+## 🔗 Support
+
+- **GitHub Issues**: Report bugs or request features
+- **Telerik Support**: For Telerik-specific issues
+- **Azure Support**: For Azure Storage questions
+
+## 📄 License
 
 This project is provided as-is for educational and development purposes.
-
-## Resources
-
-- [Azure Storage Documentation](https://docs.microsoft.com/en-us/azure/storage/)
-- [Azure SDK for .NET](https://github.com/Azure/azure-sdk-for-net)
-- [Windows Forms Documentation](https://docs.microsoft.com/en-us/dotnet/desktop/winforms/)
-- [Azure Storage Explorer (Official)](https://azure.microsoft.com/en-us/features/storage-explorer/)
 
 ---
 
 **Created by:** hrdm1105-dotcom  
-**Last Updated:** 2026  
-**Version:** 1.0.0
+**Framework:** .NET 9.0  
+**UI Framework:** Telerik UI for WinForms 2024.1+  
+**Last Updated:** May 2026  
+**Version:** 2.0.0 (Telerik Edition)
